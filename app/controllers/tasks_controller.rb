@@ -4,15 +4,17 @@ class TasksController < ApplicationController
 
     SESSION_KEY_FOR_PARAM = :task
   
-    # GET /tasks
-    # GET /tasks.json
     def index
-      if params[:task_name].present?
-        @tasks = Task.name_is(params[:task_name]).is_not_old
-      else
-        @tasks = Task.all.is_not_old
-      end
+      filter = Tasks::Filter.new
+      @search_params = params
 
+      @tasks = filter.search_tasks(@search_params)
+
+      # if params[:task_name].present?
+      #   @tasks = Task.name_is(params[:task_name]).is_not_old
+      # else
+      #   @tasks = Task.all.is_not_old
+      # end
       @task = Task.new
       @user = User.find(current_user.id)
     end
@@ -20,22 +22,17 @@ class TasksController < ApplicationController
   
     def create
       @task = Task.new task_params
-      if @task.save
-        redirect_to action: "index"
-      else
-        render 'index'
-      end
+      @task.save
+      redirect_to action: "index"
     end
   
     def update
-      task = Tasks::Register.new(@task).update(task_params, current_user.id, params[:id])
+      task = Tasks::Register.new(@task).update(task_params, current_user.id, task_params[:id])
       redirect_to action: "index"
     end
 
-    # DELETE /tasks/1
-    # DELETE /tasks/1.json
     def destroy
-        task = Tasks::Register.new(@task).delete(current_user.id, params[:id])
+        task = Tasks::Register.new(@task).delete(task_params[:id])
         redirect_to action: "index"
     end
   
@@ -57,21 +54,6 @@ class TasksController < ApplicationController
         :user_id,
         :updated_at,
       )
-    end
-  
-    # バリデーションチェック
-    # @param [Object] task タスクオブジェクト
-    # @param [DateTime] updated_at 更新日時
-    # @return [Object] task タスクオブジェクト
-    def validate_on_confirm(task, updated_at = nil)
-      task.validate
-      task_name_duplicated = call_task_name_duplicated?(updated_at) if updated_at.present?
-      task_name_duplicated = call_task_name_duplicated? unless updated_at.present?
-      task.errors.add(
-        :task_name,
-        I18n.t('errors.messages.uniqueness', value: task_params[:task_name])
-      ) if task_name_duplicated
-      task
     end
   
     # タスク重複チェックを呼び出す

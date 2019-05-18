@@ -46,7 +46,7 @@ class Tasks::Register
   # @return [Bool] 削除に成功した場合はtrue、削除に失敗した場合はfalse
   # @raise [ActiveRecord::StatementInvalid] DBアクセス時に何らかのエラー
   # @raise [AlreadyDeleted] 更新データなし（削除されていた）
-  def delete(company_id, task_id)
+  def delete(task_id)
     ActiveRecord::Base.transaction do
       @task.lock!
       fail AlreadyDeleted if Task.exists?(id: task_id, old_flg: ::Task.old_flgs[:is_old])
@@ -70,25 +70,4 @@ class Tasks::Register
     { old_flg: ::Task.old_flgs[:is_old] }
   end
 
-  # CSVデータから取得したパラメーターをフォーマット
-  # @param [Array] params
-  # @return [Hash] formatted_parameter
-  def format_place_params(params)
-    column_name_list = [
-      :place_name,
-      :postal_code,
-      :address,
-      :phone_number
-    ]
-
-    formatted_parameter = {}
-    params.each_with_index do |value, index|
-      if value.present?
-        # 全角半角スペーストリム
-        value&.gsub!(/[\s| ]+/, '')
-      end
-      formatted_parameter[column_name_list[index]] = value
-    end
-    formatted_parameter
-  end
 end

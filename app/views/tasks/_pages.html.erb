@@ -14,9 +14,10 @@
               <li class="list_info-shop"><p><%= task.task_name %></p></li>
             </ul>
             <span class="list_info-data-text"><%= "更新日時：#{formated_date(task.updated_at)}" %></span>
-
-            <%= form_tag task_path(task.id), method: :delete, action: :destroy, remote: true, id: :form_destroy, data: { action: :remodal_destroy } do %>
-              <%= button_tag '削除する', type: :submit, id: :destroy_confirm_btn, class: 'btn_blue btn_big float_r', data: { method: :remodal_destroy_confirm } %>
+            <% if task.is_not_old? %>
+              <%= form_tag task_path(task.id), method: :delete, action: :destroy, remote: true, id: :form_destroy, data: { action: :remodal_destroy } do %>
+                <%= button_tag '削除する', type: :submit, id: :destroy_confirm_btn, class: 'btn_blue btn_big float_r', data: { method: :remodal_destroy_confirm } %>
+              <% end %>
             <% end %>
 
             <span>
