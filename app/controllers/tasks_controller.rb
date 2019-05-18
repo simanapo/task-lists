@@ -7,13 +7,18 @@ class TasksController < ApplicationController
     # GET /tasks
     # GET /tasks.json
     def index
+      if params[:task_name].present?
+        @tasks = Task.name_is(params[:task_name]).is_not_old
+      else
+        @tasks = Task.all.is_not_old
+      end
+
       @task = Task.new
-      @tasks = Task.all
       @user = User.find(current_user.id)
     end
 
   
-    def confirm
+    def create
       @task = Task.new task_params
       if @task.save
         redirect_to action: "index"
@@ -22,67 +27,22 @@ class TasksController < ApplicationController
       end
     end
   
-    def update_confirm
-      respond_to do |format|
-        @task.assign_attributes(task_params)
-        task = validate_on_confirm(@task, task_params[:updated_at])
-        if task.errors.blank?
-          session[SESSION_KEY_FOR_PARAM] = task_params
-          format.json { render json: task, status: :ok }
-        else
-          format.json { fail AsyncRetryValidationError, task.errors }
-        end
-      end
-    end
-  
-    # POST /tasks
-    # POST /tasks.json
-    def create
-      respond_to do |format|
-        request = session[SESSION_KEY_FOR_PARAM]
-        task = Tasks::Register.new
-        task.insert(request, request[:user_id])
-        session[SESSION_KEY_FOR_PARAM] = nil
-        format.json { render json: task, status: :ok }
-      end
-    end
-  
-    # PATCH/PUT /tasks/1
-    # PATCH/PUT /tasks/1.json
     def update
-      respond_to do |format|
-        request = session[SESSION_KEY_FOR_PARAM]
-        task = Tasks::Register.new(@task).update(request, @task.company_id, params[:id])
-        session[SESSION_KEY_FOR_PARAM] = nil
-        format.json { render json: task, status: :ok }
-      end
+      task = Tasks::Register.new(@task).update(task_params, current_user.id, params[:id])
+      redirect_to action: "index"
     end
-  
+
     # DELETE /tasks/1
     # DELETE /tasks/1.json
     def destroy
-      respond_to do |format|
-        request = {}
-        request[:updated_at] = params[:updated_at]
-        task = Tasks::Register.new(@task).delete(request, @task.company_id, params[:id])
-        if task.errors.blank?
-          format.json { render json: task, status: :ok }
-        else
-          format.json { fail AsyncRetryValidationError, task.errors }
-        end
-      end
-    end
-  
-    # D&Dで並べ替えるためのメソッド
-    def sort
-      @task.update(task_params)
-      render body: nil
+        task = Tasks::Register.new(@task).delete(current_user.id, params[:id])
+        redirect_to action: "index"
     end
   
     private
   
-    # パラメータから取得したIDから、使用地を取得
-    # @return [Object] @task 使用地オブジェクト
+    # パラメータから取得したIDから、タスクを取得
+    # @return [Object] @task タスクオブジェクト
     def set_task
       @task = Task.find(params[:id])
     end
@@ -92,6 +52,7 @@ class TasksController < ApplicationController
     # @note ストロングパラメータ
     def task_params
       params.require(:task).permit(
+        :id,
         :task_name,
         :user_id,
         :updated_at,
@@ -99,9 +60,9 @@ class TasksController < ApplicationController
     end
   
     # バリデーションチェック
-    # @param [Object] task 使用地オブジェクト
+    # @param [Object] task タスクオブジェクト
     # @param [DateTime] updated_at 更新日時
-    # @return [Object] task 使用地オブジェクト
+    # @return [Object] task タスクオブジェクト
     def validate_on_confirm(task, updated_at = nil)
       task.validate
       task_name_duplicated = call_task_name_duplicated?(updated_at) if updated_at.present?
@@ -113,7 +74,7 @@ class TasksController < ApplicationController
       task
     end
   
-    # 使用地重複チェックを呼び出す
+    # タスク重複チェックを呼び出す
     # @param [DateTime] updated_at 更新日時
     # @return [Bool] 重複している場合はtrue、重複していない場合はfalse
     def call_task_name_duplicated?(updated_at = nil)
@@ -129,14 +90,6 @@ class TasksController < ApplicationController
           task_params[:task_name]
         )
       end
-    end
-  
-    def opc_and_sales_only!
-      raise ::ForbiddenError.new unless current_user.opc_admin_user? || current_user.sales_admin_user?
-    end
-  
-    def opc_only!
-      raise ::ForbiddenError.new unless current_user.opc_admin_user?
     end
 
   end

@@ -6,7 +6,7 @@
   <% end %>
   <% if current_user.present? %>
     <div class="">
-      <%= form_with model: task, url: confirm_tasks_path, remote: true, data: { method: :create } do |f| %>
+      <%= form_with model: task, remote: true, data: { method: :create } do |f| %>
         <div class="division_edit-area input-box_only">
           <div class="basic_input-box">
             <%= f.hidden_field :user_id, value: current_user.id %>
