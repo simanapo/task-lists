@@ -1,0 +1,2 @@
+class AlreadyUpdated < StandardError
+end

@@ -1,0 +1,2 @@
+class AlreadyDeleted < StandardError
+end
