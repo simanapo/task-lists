@@ -18,11 +18,6 @@ class Task < ApplicationRecord
     presence: true,
     length: { maximum: 1000 }
 
-  # uniqueness用のバリデーション
-  # with_options if: :is_not_old? do
-  #   validates :task_name, uniqueness: { scope: [:old_flg, :user_id] }
-  # end
-
   ##
   # scopes
   ##
@@ -47,7 +42,7 @@ class Task < ApplicationRecord
   ##
 
   # タスク重複チェック
-  # @param  [integer] user_id 企業ID
+  # @param  [integer] user_id ユーザID
   # @param  [string]  task_name タスク名
   # @return [Boolean]
   def self.task_name_duplicated?(user_id, task_name)
@@ -56,7 +51,7 @@ class Task < ApplicationRecord
 
   # タスク重複チェック（編集時）
   # @param  [string]  id         タスクID
-  # @param  [integer] user_id 企業ID
+  # @param  [integer] user_id ユーザID
   # @param  [string]  task_name タスク名
   # @return [Boolean]
   def self.task_name_duplicated_for_edit?(id, user_id, task_name)

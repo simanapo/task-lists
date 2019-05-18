@@ -8,7 +8,7 @@ class Tasks::Register
 
   # タスクを登録する
   # @param [Hash] request 入力データ（タスクモデル）
-  # @param [Integer] company_id 企業ID
+  # @param [Integer] user_id ユーザID
   # @return [Object] タスクのオブジェクト
   # @raise [ActiveRecord::StatementInvalid] DBアクセス時に何らかのエラー
   # @raise [ValidationError] バリデーションエラー
@@ -23,8 +23,7 @@ class Tasks::Register
 
   # タスクを更新する
   # @param [Hash] request 入力データ（タスクモデル）
-  # @option request [DateTime] :updated_at 更新日時
-  # @param [Integer] user_id 企業ID
+  # @param [Integer] user_id ユーザID
   # @param [Integer] task_id タスクID
   # @return [Object] タスクのオブジェクト
   # @raise [ActiveRecord::StatementInvalid] DBアクセス時に何らかのエラー
@@ -40,7 +39,7 @@ class Tasks::Register
   end
 
   # タスクを削除する
-  # @param [Hash] request 送信データ
+  # @param [Hash] request 入力データ（タスクモデル）
   # @option request [DateTime] :updated_at 更新日時
   # @param [Integer] task_id タスクID
   # @return [Bool] 削除に成功した場合はtrue、削除に失敗した場合はfalse
@@ -58,12 +57,12 @@ class Tasks::Register
   private
 
   def update_param(request)
-    { task_name:   request['task_name']}
+    { task_name: request['task_name']}
   end
 
   def create_param(request, user_id)
     { user_id:   user_id,
-      task_name:   request['task_name']}
+      task_name: request['task_name']}
   end
 
   def delete_param

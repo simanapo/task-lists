@@ -32,7 +32,6 @@
             <%= form_with model: task, remote: true, data: { method: :update } do |f| %>
               <div class="division_edit-area input-box_only">
                 <div class="basic_input-box">
-                  <%= f.hidden_field :updated_at, value: task.updated_at %>
                   <%= f.hidden_field :user_id, value: task.user_id %>
                   <dl class="mb_15">
                     <dt><p>タスク名</p><span class="required">*</span></dt>
@@ -48,8 +47,9 @@
               <!-- division_edit-area -->
               <div class="" data-method="update_error_message"></div>
               <div class="btn_box">
-                <%= f.button t('view.messages.cancel'), class: %i(js-address_close btn_white btn_big), type: 'button' %>
-                <%= f.button t('view.messages.do_edit'), id: :'modal-open', class: %i(btn_blue btn_big) %>
+                <% if task.is_not_old? %>
+                  <%= f.button t('view.messages.do_edit'), id: :'modal-open', class: %i(btn_blue btn_big) %>
+                <% end %>
               </div>
             <% end %>
           </div>

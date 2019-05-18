@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
     before_action :sign_in_required, only: [:index]
-    before_action :set_task, only: %i[update_confirm update destroy sort]
+    before_action :set_task, only: %i[update destroy]
 
     SESSION_KEY_FOR_PARAM = :task
   
@@ -9,16 +9,9 @@ class TasksController < ApplicationController
       @search_params = params
 
       @tasks = filter.search_tasks(@search_params)
-
-      # if params[:task_name].present?
-      #   @tasks = Task.name_is(params[:task_name]).is_not_old
-      # else
-      #   @tasks = Task.all.is_not_old
-      # end
       @task = Task.new
       @user = User.find(current_user.id)
     end
-
   
     def create
       @task = Task.new task_params
@@ -32,7 +25,7 @@ class TasksController < ApplicationController
     end
 
     def destroy
-        task = Tasks::Register.new(@task).delete(task_params[:id])
+        task = Tasks::Register.new(@task).delete(params[:id])
         redirect_to action: "index"
     end
   
@@ -55,24 +48,5 @@ class TasksController < ApplicationController
         :updated_at,
       )
     end
-  
-    # タスク重複チェックを呼び出す
-    # @param [DateTime] updated_at 更新日時
-    # @return [Bool] 重複している場合はtrue、重複していない場合はfalse
-    def call_task_name_duplicated?(updated_at = nil)
-      if updated_at.nil?
-        Task.task_name_duplicated?(
-          task_params[:user_id],
-          task_params[:task_name]
-        )
-      else
-        Task.task_name_duplicated_for_edit?(
-          params[:id],
-          task_params[:user_id],
-          task_params[:task_name]
-        )
-      end
-    end
 
   end
-  
