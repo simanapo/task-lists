@@ -1,15 +1,15 @@
 class Tasks::Register
 
   # 初期化
-  # @param [Object] task 使用地のオブジェクト
+  # @param [Object] task タスクのオブジェクト
   def initialize(task = nil)
     @task = task
   end
 
-  # 使用地を登録する
-  # @param [Hash] request 入力データ（使用地モデル）
+  # タスクを登録する
+  # @param [Hash] request 入力データ（タスクモデル）
   # @param [Integer] company_id 企業ID
-  # @return [Object] 使用地のオブジェクト
+  # @return [Object] タスクのオブジェクト
   # @raise [ActiveRecord::StatementInvalid] DBアクセス時に何らかのエラー
   # @raise [ValidationError] バリデーションエラー
   def insert(request, user_id)
@@ -21,12 +21,12 @@ class Tasks::Register
     end
   end
 
-  # 使用地を更新する
-  # @param [Hash] request 入力データ（使用地モデル）
+  # タスクを更新する
+  # @param [Hash] request 入力データ（タスクモデル）
   # @option request [DateTime] :updated_at 更新日時
   # @param [Integer] user_id 企業ID
-  # @param [Integer] task_id 使用地ID
-  # @return [Object] 使用地のオブジェクト
+  # @param [Integer] task_id タスクID
+  # @return [Object] タスクのオブジェクト
   # @raise [ActiveRecord::StatementInvalid] DBアクセス時に何らかのエラー
   # @raise [ValidationError] バリデーションエラー
   # @raise [AlreadyUpdated] 更新されていた
@@ -39,10 +39,10 @@ class Tasks::Register
     end
   end
 
-  # 使用地を削除する
+  # タスクを削除する
   # @param [Hash] request 送信データ
   # @option request [DateTime] :updated_at 更新日時
-  # @param [Integer] task_id 使用地ID
+  # @param [Integer] task_id タスクID
   # @return [Bool] 削除に成功した場合はtrue、削除に失敗した場合はfalse
   # @raise [ActiveRecord::StatementInvalid] DBアクセス時に何らかのエラー
   # @raise [AlreadyDeleted] 更新データなし（削除されていた）

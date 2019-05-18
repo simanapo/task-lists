@@ -24,7 +24,7 @@ class TasksController
       for error_message in error_messages
         element.append '<p>' + error_message.message + '</p>'
       return
-    # 使用地登録 確認
+    # タスク登録 確認
     $('[data-method="confirm"]')
       .on 'ajax:success', (event, data, status, xhr)->
         data = $.parseJSON(xhr.responseText)
@@ -36,7 +36,7 @@ class TasksController
         show_error_message element, data.errors
         return
 
-    # 使用地登録 登録
+    # タスク登録 登録
     $('[data-method="create"]')
       .on 'ajax:success', (event, data, status, xhr)->
         data = $.parseJSON(xhr.responseText)
@@ -46,7 +46,7 @@ class TasksController
         Application.show_error_modal(xhr)
         return
 
-    # 使用地更新 確認
+    # タスク更新 確認
     $('[data-method="update_confirm"]')
       .on 'ajax:success', (event, data, status, xhr)->
         data = $.parseJSON(xhr.responseText)
@@ -60,7 +60,7 @@ class TasksController
         show_error_message element, data.errors
         return
 
-    # 使用地更新 登録
+    # タスク更新 登録
     $('[data-method="update"]')
       .on 'ajax:success', (event, data, status, xhr)->
         data = $.parseJSON(xhr.responseText)
@@ -70,7 +70,7 @@ class TasksController
         Application.show_error_modal(xhr)
         return
 
-    # 使用地削除 確認
+    # タスク削除 確認
     $('[data-method="delete_confirm"]')
       .click ->
         modal = $('[data-remodal-id="delete03-1"]')
@@ -81,7 +81,7 @@ class TasksController
         modal.remodal().open()
         return
 
-    # 使用地 削除　登録
+    # タスク 削除　登録
     $('[data-method="delete"]')
       .on 'ajax:success', (event, data, status, xhr)->
         data = $.parseJSON(xhr.responseText)

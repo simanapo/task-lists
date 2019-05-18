@@ -11,7 +11,7 @@
           <div class="basic_input-box">
             <%= f.hidden_field :user_id, value: current_user.id %>
             <dl class="mb_15">
-              <dt><p>使用地名</p><span class="required">*</span></dt>
+              <dt><p>タスク名</p><span class="required">*</span></dt>
               <dd>
                 <div class="form_colume">
                   <%= f.text_field :task_name, placeholder: "例：勉強", class: %i(form_input) %>
