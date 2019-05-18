@@ -1,0 +1,57 @@
+<% if tasks.present? %>
+  <div class="address_list-title">
+    <h3 class="middle_gray_title">使用地一覧</h3>
+    <p>順番を変更するには<i class="icon_drag_icon"></i>をドラッグしてください。<span>※並び順は使用地選択の際の順番に反映されます。</span></p>
+  </div>
+  <!-- address_list-title -->
+  <div class="address_list">
+    <ul id="sortListArea">
+      <% tasks.each do |task| %>
+        <li data-model-name="<%= task.class.name.underscore %>"
+          data-update-url="<%= tasks_path(task) %>">
+          <div class="accordion_list address_parts">
+            <span class="list_drag_icon"><i class="icon_drag_icon"></i></span>
+            <ul class="list_outline-place">
+              <li class="list_info-shop"><p><%= task.task_name %></p></li>
+            </ul>
+            <span class="list_info-data-text"><%= "更新日時：#{formated_date(task.updated_at)}" %></span>
+            <span>
+              <%= content_tag :i, nil, id: 'modal-open', class: 'icon_delete tooltip-n', title: "使用地を削除", data: { method: :delete_confirm }, delete_id: task.id, updated_at: task.updated_at %>
+            </span>
+            <span>
+              <%= content_tag :i, nil, class: 'icon_edit js-edit_open tooltip-n', data: { 'remodal-target': "js-edit_address#{task.id}" }, title: "編集・閲覧する" %>
+            </span>
+          </div>
+          <!-- / accordion_list -->
+          <div class="" id="js-edit_address<%= task.id %>">
+            <%= form_with model: task, url: update_confirm_task_path(task), remote: true, data: { method: :update_confirm } do |f| %>
+              <div class="division_edit-area input-box_only">
+                <div class="basic_input-box">
+                  <%= f.hidden_field :updated_at, value: task.updated_at %>
+                  <%= f.hidden_field :user_id, value: task.user_id %>
+                  <dl class="mb_15">
+                    <dt><p>使用地名</p><span class="required">*</span></dt>
+                    <dd>
+                      <div class="form_colume">
+                        <%= f.text_field :task_name, placeholder: "例：東京支社", class: %i(form_input) %>
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+                <!-- basic_input-box -->
+              </div>
+              <!-- division_edit-area -->
+              <div class="" data-method="update_error_message"></div>
+              <div class="btn_box">
+                <%= f.button t('view.messages.cancel'), class: %i(js-address_close btn_white btn_big), type: 'button' %>
+                <%= f.button t('view.messages.do_edit'), id: :'modal-open', class: %i(btn_blue btn_big) %>
+              </div>
+            <% end %>
+          </div>
+          <!-- js-open_editarea -->
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <!-- / address_list -->
+<% end %>

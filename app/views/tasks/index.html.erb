@@ -1,0 +1,61 @@
+<% content_for :title do %>使用地<% end %>
+
+<!-- content_wrapper -->
+<div class="content_wrapper">
+  <section>
+    <div class="title_btn-wrap">
+      <h1><%= current_user.username %>さん</h1>
+      <h2 class="title_big accidents_details-title mb_30">タスクです</h2>
+    </div>
+    <!-- / title_btn-wrap -->
+
+    <div class="search_container">
+      <%= form_with(url: tasks_path, method: :get, local: true, id: "company-serch-form") do |f| %>
+        <div class="search_wrap-area">
+          <div class="search_wrap search_wrap-flex search_wrap-fixed align-items_center">
+            <fieldset class="form_select-block">
+              <label>
+                <legend>会社<span class="required">*</span></legend>
+                <div>
+                </div>
+              </label>
+            </fieldset>
+            <div class="search_wrap serch_btn-wrap display_inline">
+              <%= link_to "クリア", "", class: "btn_clear" %>
+              <button class="btn_search">検索</button>
+            </div>
+          </div>
+          <!-- / search_wrap -->
+        </div>
+        <!-- / search_wrap-area -->
+      <% end %>
+    </div>
+    <!-- / search_container -->
+
+    <div class="address_list-container">
+      <%= render partial: "pages", locals: { tasks: @tasks } %>
+
+      <%= render partial: "new",    locals: { task:  @task }  %>
+
+
+      <% if @task.errors.present? %>
+        <div class="error_block">
+          <% @task.errors&.full_messages.each do |m| %>
+            <p><%= m %></p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+  </section>
+</div>
+<!-- content_wrapper -->
+
+
+    <%= render partial: "modals", locals: { user: @user } %>
+
+<script>
+  Application.tasks.update_path = '<%= tasks_path %>';
+  Application.tasks.csv_url = '<%= csv_upload_tasks_path %>';
+</script>
+

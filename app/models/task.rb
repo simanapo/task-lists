@@ -1,7 +1,7 @@
 class Task < ApplicationRecord
 
   # 論理削除使用
-  acts_as_paranoid
+  # acts_as_paranoid
 
   ##
   # リレーション
@@ -19,9 +19,9 @@ class Task < ApplicationRecord
     length: { maximum: 1000 }
 
   # uniqueness用のバリデーション
-  with_options if: :is_not_old? do
-    validates :task_name, uniqueness: { scope: [:old_flg, :user_id] }
-  end
+  # with_options if: :is_not_old? do
+  #   validates :task_name, uniqueness: { scope: [:old_flg, :user_id] }
+  # end
 
   ##
   # scopes
@@ -51,7 +51,7 @@ class Task < ApplicationRecord
   # @param  [string]  task_name タスク名
   # @return [Boolean]
   def self.task_name_duplicated?(user_id, task_name)
-    !Task.user_id_is(user_id).name_is(task_name).is_not_old.blank?
+    !Task.user_id_is(user_id).name_is(task_name).blank?
   end
 
   # タスク重複チェック（編集時）
@@ -60,7 +60,7 @@ class Task < ApplicationRecord
   # @param  [string]  task_name タスク名
   # @return [Boolean]
   def self.task_name_duplicated_for_edit?(id, user_id, task_name)
-    !Task.id_is_not(id).user_id_is(user_id).name_is(task_name).is_not_old.blank?
+    !Task.id_is_not(id).user_id_is(user_id).name_is(task_name).blank?
   end
 
 end

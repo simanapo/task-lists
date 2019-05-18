@@ -1,0 +1,37 @@
+<div class="new_registration mt_40">
+  <% if current_user.present? %>
+    <p class="js-registration_open new_registration-btn new_place-registration">新規登録<i class="icon_btn-down"></i></p>
+  <% else %>
+    <p class="disable js-registration_open new_registration-btn new_place-registration">新規登録<i class="icon_btn-down"></i></p>
+  <% end %>
+  <% if current_user.present? %>
+    <div class="">
+      <%= form_with model: task, url: confirm_tasks_path, remote: true, data: { method: :create } do |f| %>
+        <div class="division_edit-area input-box_only">
+          <div class="basic_input-box">
+            <%= f.hidden_field :user_id, value: current_user.id %>
+            <dl class="mb_15">
+              <dt><p>使用地名</p><span class="required">*</span></dt>
+              <dd>
+                <div class="form_colume">
+                  <%= f.text_field :task_name, placeholder: "例：勉強", class: %i(form_input) %>
+                </div>
+              </dd>
+            </dl>
+          </div>
+          <!-- basic_input-box -->
+        </div>
+        <!-- division_edit-area -->
+        <div class="" data-method="regist_error_message"></div>
+        <div class="btn_box">
+          <%= f.button t('view.messages.cancel'), type: 'button', class: %i(js-place_registration_close btn_white btn_big) %>
+          <%= f.button t('view.messages.do_regist'), id: :'modal-open05', class: %i(btn_blue btn_big), data: { 'modal': 'modal01' } %>
+        </div>
+
+      <% end %>
+
+    </div>
+
+
+  <% end %>
+</div>
