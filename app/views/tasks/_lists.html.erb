@@ -2,7 +2,6 @@
   <div class="address_list-title">
     <h3 class="middle_gray_title">タスク一覧</h3>
   </div>
-  <!-- address_list-title -->
   <div class="address_list">
     <ul id="sortListArea">
       <% tasks.each do |task| %>
@@ -27,7 +26,6 @@
               <%= content_tag :i, nil, class: 'icon_edit js-edit_open tooltip-n', data: { 'remodal-target': "js-edit_address#{task.id}" }, title: "編集・閲覧する" %>
             </span>
           </div>
-          <!-- / accordion_list -->
           <div class="" id="js-edit_address<%= task.id %>">
             <%= form_with model: task, remote: true, data: { method: :update } do |f| %>
               <div class="division_edit-area input-box_only">
@@ -42,9 +40,7 @@
                     </dd>
                   </dl>
                 </div>
-                <!-- basic_input-box -->
               </div>
-              <!-- division_edit-area -->
               <div class="" data-method="update_error_message"></div>
               <div class="btn_box">
                 <% if task.is_not_old? %>
@@ -53,10 +49,8 @@
               </div>
             <% end %>
           </div>
-          <!-- js-open_editarea -->
         </li>
       <% end %>
     </ul>
   </div>
-  <!-- / address_list -->
 <% end %>

@@ -1,14 +1,11 @@
 <% content_for :title do %>タスク一覧<% end %>
 
-<!-- content_wrapper -->
 <div class="content_wrapper">
   <section>
     <div class="title_btn-wrap">
       <h1><%= current_user.username %>さん</h1>
       <h2 class="title_big accidents_details-title mb_30">タスク一覧</h2>
     </div>
-    <!-- / title_btn-wrap -->
-
     <div class="search_container">
       <%= form_with(url: tasks_path, method: :get, local: true, id: "company-serch-form") do |f| %>
         <div class="search_wrap-area">
@@ -34,37 +31,20 @@
                 </div>
               </label>
             </fieldset>
-
             <div class="search_wrap serch_btn-wrap display_inline">
               <%= link_to 'クリア', :tasks, class: 'btn_clear' %>
               <button class="btn_search">検索</button>
             </div>
           </div>
-          <!-- / search_wrap -->
         </div>
-        <!-- / search_wrap-area -->
       <% end %>
     </div>
-    <!-- / search_container -->
-
     <div class="address_list-container">
-      <%= render partial: "pages", locals: { tasks: @tasks } %>
-
+      <%= render partial: "lists", locals: { tasks: @tasks } %>
       <%= render partial: "new",    locals: { task:  @task }  %>
-
-      <% if @task.errors.present? %>
-        <div class="error_block">
-          <% @task.errors&.full_messages.each do |m| %>
-            <p><%= m %></p>
-          <% end %>
-        </div>
-      <% end %>
     </div>
-
   </section>
 </div>
-<!-- content_wrapper -->
-
 <script>
   Application.tasks.update_path = '<%= tasks_path %>';
 </script>
