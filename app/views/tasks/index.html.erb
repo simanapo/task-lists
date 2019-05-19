@@ -1,0 +1,51 @@
+<% content_for :title do %>タスク一覧<% end %>
+
+<div class="content_wrapper">
+  <section>
+    <div class="title_btn-wrap">
+      <h1><%= current_user.username %>さん</h1>
+      <h2 class="title_big accidents_details-title mb_30">タスク一覧</h2>
+    </div>
+    <div class="search_container">
+      <%= form_with(url: tasks_path, method: :get, local: true, id: "company-serch-form") do |f| %>
+        <div class="search_wrap-area">
+          <div class="search_wrap search_wrap-flex search_wrap-fixed align-items_center">
+            <fieldset class="form_select-block">
+              <label>
+                <legend>タスク名</legend>
+                <div>
+                  <%= f.text_field :task_name, placeholder: "例：勉強", class: "form_input", value: @search_params[:task_name] %>
+                </div>
+              </label>
+            </fieldset>
+            <fieldset class="form_radio-block">
+              <label>
+                <legend>ステータス</legend>
+                <div class="form_radio-group">
+                  <%= f.radio_button :status, :all, name: 'status', checked: @search_params[:status].eql?('all') || @search_params[:status].nil? %>
+                  <%= f.label "status_all", 'すべて' %>
+                  <%= f.radio_button :status, :only_deleted, name: 'status', checked: @search_params[:status].eql?('only_deleted') %>
+                  <%= f.label "status_only_deleted", '削除済のみ' %>
+                  <%= f.radio_button :status, :all_include_deleted, name: 'status', checked: @search_params[:status].eql?('all_include_deleted') %>
+                  <%= f.label "status_all_include_deleted", '削除済含むすべて' %>
+                </div>
+              </label>
+            </fieldset>
+            <div class="search_wrap serch_btn-wrap display_inline">
+              <%= link_to 'クリア', :tasks, class: 'btn_clear' %>
+              <button class="btn_search">検索</button>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="address_list-container">
+      <%= render partial: "lists", locals: { tasks: @tasks } %>
+      <%= render partial: "new",    locals: { task:  @task }  %>
+    </div>
+  </section>
+</div>
+<script>
+  Application.tasks.update_path = '<%= tasks_path %>';
+</script>
+
